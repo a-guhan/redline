@@ -1,0 +1,22 @@
+[package]
+name = "redline"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[features]
+server = []
+
+[lib]
+name = "ride_engine"
+crate-type = ["cdylib", "rlib"]
+
+[[bin]]
+name = "redline-server"
+path = "src/bin/server.rs"
+required-features = ["server"]
+
+[profile.release]
+lto = true
+codegen-units = 1
+panic = "abort"

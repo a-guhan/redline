@@ -1,0 +1,23 @@
+# macOS
+.DS_Store
+
+# Nix and direnv
+/result
+/result-*
+/.direnv/
+
+# Local tooling and build output
+/node_modules/
+/dist/
+/build/
+/coverage/
+/rust/target/
+/assets/ride_engine.wasm
+*.log
+.env
+.env.*
+!.env.example
+
+# Local editor settings
+.vscode/
+.idea/

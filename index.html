@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <meta name="theme-color" content="#080b0a" />
+  <meta name="description" content="A living motorcycle circuit. Learn the line. Feel the speed." />
+  <title>REDLINE — Virtual Circuit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <script type="importmap">
+    {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js"}}
+  </script>
+</head>
+<body>
+  <main class="simulator" id="simulator">
+    <canvas id="scene" aria-label="Three-dimensional motorcycle racing circuit"></canvas>
+    <div class="world-vignette"></div>
+    <div class="world-grain"></div>
+
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Redline virtual circuit"><span class="brand-mark">R<span>/</span></span><span>REDLINE<small>VIRTUAL CIRCUIT / 01</small></span></a>
+      <div class="track-label"><i class="signal-dot"></i><span>HIMALAYAN GP</span><b>3.2 KM</b><span class="track-weather">LADAKH PASS · CLEAR AIR</span></div>
+      <button id="sound-toggle" class="sound-toggle" aria-label="Toggle engine audio"><span>♫</span><b id="sound-text">SOUND ON</b></button>
+    </header>
+
+    <section class="session-hud" aria-label="Race session">
+      <div class="session-data"><span class="hud-caption">LAP</span><strong id="lap-count">01<span>/ 03</span></strong><i></i><span class="hud-caption">LAP TIME</span><strong class="timer" id="session-time">00:00.00</strong></div>
+      <div class="leaderboard"><div class="leaderboard-title"><span>ON TRACK</span><b>3 RIDERS</b></div><div class="rider-row player-row"><i class="rider-dot you"></i><strong>YOU</strong><span id="player-rank">P3</span></div><div class="rider-row"><i class="rider-dot lime"></i><strong>RAVI</strong><span id="ravi-gap">+00.0</span></div><div class="rider-row"><i class="rider-dot orange"></i><strong>AYA</strong><span id="aya-gap">+00.0</span></div></div>
+    </section>
+
+    <aside class="track-map" aria-label="Circuit map"><div class="map-heading"><span>HIMALAYAN GP</span><span>LIVE MAP</span></div><canvas id="map" width="240" height="190"></canvas><div class="map-foot"><i></i> YOU &nbsp; <b>●</b> RIDERS</div></aside>
+
+    <section class="intro" id="intro">
+      <div class="intro-kicker"><i></i> <span id="mode-kicker">LADAKH PASS / FREEDOM RIDE</span></div>
+      <h1 id="intro-title">RIDE WITHOUT<br/><em>A CEILING.</em></h1>
+      <p id="intro-copy">No speed limiter. Three laps to the flag.<br/>You, the circuit, and Ravi and Aya.</p>
+      <div class="mode-picker" role="group" aria-label="Choose ride mode">
+        <button class="mode-option" data-mode="training" aria-pressed="false"><small>01 / RACE SCHOOL</small><b>LEARN THE CIRCUIT</b><span>Three timed laps · 282 km/h limit</span></button>
+        <button class="mode-option selected" data-mode="freedom" aria-pressed="true"><small>02 / OPEN GRID</small><b>FREEDOM</b><span>No speed limiter · race the pack</span></button>
+      </div>
+      <button id="start-session" class="launch-button"><span>▶</span> START FREEDOM RIDE <b>↗</b></button>
+      <div class="intro-controls"><span><kbd>W</kbd> THROTTLE</span><span><kbd>S</kbd> BRAKE</span><span><kbd>A</kbd><kbd>D</kbd> STEER + LEAN</span></div>
+    </section>
+
+    <div class="countdown" id="countdown" aria-live="polite"></div>
+    <div class="corner-alert" id="corner-alert"><span class="corner-icon">!</span><span><small id="corner-class">BRAKING ZONE</small><strong id="corner-name">TURN 01 / HAIRPIN</strong></span><b id="brake-distance">BRAKE NOW</b></div>
+    <section class="bike-hud" aria-label="Bike telemetry">
+      <div class="speed-panel"><div class="panel-top"><span>SPEED</span><i><b id="gear">1</b> GEAR</i></div><div class="speed-value"><strong id="speed">000</strong><span>KM/H</span></div><div class="rpm-bars"><i id="rpm-fill"></i></div><div class="rpm-line"><span>ENGINE RPM</span><b id="rpm">1,200</b></div></div>
+      <div class="timing-panel"><div><small>LAST LAP</small><strong id="last-lap">--:--.--</strong></div><div><small>BEST LAP</small><strong id="best-lap">--:--.--</strong></div><div><small>LEAN</small><strong id="lean">00°</strong></div></div>
+    </section>
+
+    <div class="controls" id="controls">
+      <div class="steer-controls"><button data-steer="-1" aria-label="Move left / lean left">↶</button><small>LEAN</small><button data-steer="1" aria-label="Move right / lean right">↷</button></div>
+      <button class="brake-control" id="brake"><span>■</span> BRAKE <kbd>S</kbd></button>
+      <button class="throttle-control" id="throttle"><span>⌁</span> THROTTLE <kbd>W</kbd></button>
+    </div>
+
+    <div class="coach-tip" id="coach-tip"><i>COACH</i><span id="coach-text">Brake before the corner. Release the brake as you lean in.</span></div>
+    <div class="session-status"><span><i class="signal-dot"></i> <b id="session-state">PIT LANE</b></span><span id="status-message">WAITING FOR GREEN</span></div>
+
+    <section class="crash-screen" id="crash-screen" aria-live="assertive">
+      <div class="crash-card"><div class="crash-stamp">RIDER DOWN</div><span class="crash-kicker">THAT'S PART OF LEARNING THE LIMIT</span><h2 id="crash-title">YOU RAN WIDE.</h2><p id="crash-detail">You carried too much speed into the corner.</p><div class="crash-stats"><span>ENTRY SPEED<strong id="crash-speed">000 KM/H</strong></span><span>YOUR LAP<strong id="crash-time">00:00.00</strong></span></div><button id="retry">RETRY THIS MOMENT <b>↻</b></button><a href="#" id="restart">RESTART SESSION</a></div>
+    </section>
+    <div class="toast" id="toast" role="status"></div>
+  </main>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
